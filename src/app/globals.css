@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+body {
+  color: var(--foreground);
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+
+/* React DatePicker Custom Styles */
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  font-family: inherit;
+}
+
+.dark .react-datepicker {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #ffffff;
+}
+
+.react-datepicker__header {
+  background-color: #f3f4f6;
+  border-bottom: 1px solid #d1d5db;
+  border-radius: 0.375rem 0.375rem 0 0;
+}
+
+.dark .react-datepicker__header {
+  background-color: #4b5563;
+  border-bottom-color: #6b7280;
+}
+
+.react-datepicker__current-month {
+  color: #374151;
+  font-weight: 600;
+}
+
+.dark .react-datepicker__current-month {
+  color: #ffffff;
+}
+
+.react-datepicker__day {
+  color: #374151;
+}
+
+.dark .react-datepicker__day {
+  color: #d1d5db;
+}
+
+.react-datepicker__day:hover {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.dark .react-datepicker__day:hover {
+  background-color: #1f2937;
+  color: #60a5fa;
+}
+
+.react-datepicker__day--selected {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.react-datepicker__day--selected:hover {
+  background-color: #2563eb;
+}
+
+.react-datepicker__day--today {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.dark .react-datepicker__day--today {
+  background-color: #451a03;
+  color: #fbbf24;
+}
+
+.react-datepicker__day--today:hover {
+  background-color: #fde68a;
+}
+
+.dark .react-datepicker__day--today:hover {
+  background-color: #78350f;
+}
+
+.react-datepicker__navigation {
+  top: 13px;
+}
+
+.react-datepicker__navigation--previous {
+  left: 6px;
+}
+
+.react-datepicker__navigation--next {
+  right: 6px;
+}
+
+.dark .react-datepicker__navigation-icon::before {
+  border-color: #d1d5db;
+}
+
+/* Custom scrollbar for better aesthetics */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
