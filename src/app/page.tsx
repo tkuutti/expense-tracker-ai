@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ExpenseProvider } from '@/hooks/useExpenses';
 import { ThemeProvider } from '@/hooks/useTheme';
-import { Dashboard, ExpenseForm, ExpenseList, Navigation, ExportButton } from '@/components';
+import { Dashboard, ExpenseForm, ExpenseList, Navigation, CloudExportButton } from '@/components';
 import { Expense } from '@/types';
 
 export default function Home() {
@@ -29,7 +29,7 @@ export default function Home() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white">All Expenses</h2>
-              <ExportButton />
+              <CloudExportButton />
             </div>
             <ExpenseList onEditExpense={handleEditExpense} />
           </div>
