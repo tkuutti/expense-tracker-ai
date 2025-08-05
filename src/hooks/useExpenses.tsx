@@ -73,7 +73,7 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
       }
 
       // Vendor filter
-      if (filters.vendor && expense.vendor.toLowerCase() !== filters.vendor.toLowerCase()) {
+      if (filters.vendor && expense.vendor?.toLowerCase() !== filters.vendor.toLowerCase()) {
         return false;
       }
 
@@ -83,7 +83,7 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
         const matchesDescription = expense.description.toLowerCase().includes(query);
         const matchesCategory = expense.category.toLowerCase().includes(query);
         const matchesAmount = expense.amount.toString().includes(query);
-        const matchesVendor = expense.vendor.toLowerCase().includes(query);
+        const matchesVendor = expense.vendor?.toLowerCase().includes(query) || false;
         
         if (!matchesDescription && !matchesCategory && !matchesAmount && !matchesVendor) {
           return false;
@@ -138,7 +138,7 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
   const getVendorStats = (): VendorStats => {
     // Group expenses by vendor
     const vendorGroups = expenses.reduce((groups, expense) => {
-      const vendor = expense.vendor.trim();
+      const vendor = expense.vendor?.trim() || 'Unknown';
       if (!groups[vendor]) {
         groups[vendor] = [];
       }

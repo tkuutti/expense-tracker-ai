@@ -128,7 +128,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                        {expense.vendor}
+                        {expense.vendor || 'Unknown'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {formatCurrency(expense.amount)}
@@ -177,7 +177,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         </div>
                         <div className="flex items-center gap-1">
                           <Store className="h-3 w-3" />
-                          {expense.vendor}
+                          {expense.vendor || 'Unknown'}
                         </div>
                       </div>
                     </div>

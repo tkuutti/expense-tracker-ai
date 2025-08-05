@@ -48,7 +48,7 @@ export default function Home() {
                 amount: editingExpense.amount,
                 category: editingExpense.category,
                 description: editingExpense.description,
-                vendor: editingExpense.vendor,
+                vendor: editingExpense.vendor || '',
                 date: editingExpense.date,
               } : null}
             />

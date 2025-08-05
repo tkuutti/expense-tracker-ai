@@ -15,7 +15,7 @@ interface ExpenseFormProps {
     amount: number;
     category: ExpenseCategory;
     description: string;
-    vendor: string;
+    vendor?: string;
     date: string;
   } | null;
 }
@@ -56,7 +56,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
     }
 
     // Vendor validation
-    if (!formData.vendor.trim()) {
+    if (!formData.vendor?.trim()) {
       newErrors.vendor = 'Please enter a vendor/payee';
     }
 
@@ -78,7 +78,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
       amount: parseFinishNumber(formData.amount),
       category: formData.category,
       description: formData.description.trim(),
-      vendor: formData.vendor.trim(),
+      vendor: formData.vendor?.trim() || '',
       date: formData.date.toISOString(),
     };
 

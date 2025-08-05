@@ -11,7 +11,7 @@ export interface Expense {
   amount: number;
   category: ExpenseCategory;
   description: string;
-  vendor: string; // Vendor/payee name
+  vendor?: string; // Vendor/payee name (optional for backward compatibility)
   date: string; // ISO date string
   createdAt: string; // ISO date string
   updatedAt: string; // ISO date string
@@ -21,7 +21,7 @@ export interface ExpenseFormData {
   amount: string;
   category: ExpenseCategory;
   description: string;
-  vendor: string;
+  vendor?: string;
   date: Date;
 }
 
