@@ -6,7 +6,10 @@
       "Bash(npm run build:*)",
       "Bash(npm run dev:*)",
       "Bash(curl:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "mcp__screenshot-server__take_screenshot",
+      "Bash(open \"http://localhost:3000\")",
+      "Bash(osascript:*)"
     ],
     "deny": []
   }

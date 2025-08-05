@@ -1,4 +1,5 @@
 export { Dashboard } from './Dashboard';
+export { ExpenseCategories } from './ExpenseCategories';
 export { ExpenseForm } from './ExpenseForm';
 export { ExpenseList } from './ExpenseList';
 export { ExpenseFiltersComponent } from './ExpenseFilters';
