@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { ExpenseProvider } from '@/hooks/useExpenses';
 import { ThemeProvider } from '@/hooks/useTheme';
-import { Dashboard, ExpenseForm, ExpenseList, Navigation, CloudExportButton } from '@/components';
+import { Dashboard, ExpenseForm, ExpenseList, Navigation, CloudExportButton, TopVendors } from '@/components';
 import { Expense } from '@/types';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'expenses' | 'add'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'expenses' | 'add' | 'vendors'>('dashboard');
   const [editingExpense, setEditingExpense] = useState<Expense | null>(null);
 
   const handleEditExpense = (expense: Expense) => {
@@ -34,6 +34,8 @@ export default function Home() {
             <ExpenseList onEditExpense={handleEditExpense} />
           </div>
         );
+      case 'vendors':
+        return <TopVendors />;
       case 'add':
         return (
           <div className="max-w-2xl mx-auto">
@@ -44,6 +46,7 @@ export default function Home() {
                 amount: editingExpense.amount,
                 category: editingExpense.category,
                 description: editingExpense.description,
+                vendor: editingExpense.vendor,
                 date: editingExpense.date,
               } : null}
             />

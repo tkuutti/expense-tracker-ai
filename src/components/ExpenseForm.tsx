@@ -15,6 +15,7 @@ interface ExpenseFormProps {
     amount: number;
     category: ExpenseCategory;
     description: string;
+    vendor: string;
     date: string;
   } | null;
 }
@@ -28,6 +29,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
     amount: editingExpense?.amount ? formatFinishNumber(editingExpense.amount) : '',
     category: editingExpense?.category || 'Food',
     description: editingExpense?.description || '',
+    vendor: editingExpense?.vendor || '',
     date: editingExpense ? new Date(editingExpense.date) : new Date(),
   });
 
@@ -53,6 +55,11 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
       newErrors.description = 'Please enter a description';
     }
 
+    // Vendor validation
+    if (!formData.vendor.trim()) {
+      newErrors.vendor = 'Please enter a vendor/payee';
+    }
+
     // Date validation
     if (!formData.date) {
       newErrors.date = 'Please select a date';
@@ -71,6 +78,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
       amount: parseFinishNumber(formData.amount),
       category: formData.category,
       description: formData.description.trim(),
+      vendor: formData.vendor.trim(),
       date: formData.date.toISOString(),
     };
 
@@ -85,6 +93,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
       amount: '',
       category: 'Food',
       description: '',
+      vendor: '',
       date: new Date(),
     });
     setErrors({});
@@ -169,6 +178,24 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
             placeholder="Enter expense description"
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
+        </div>
+
+        {/* Vendor Input */}
+        <div>
+          <label htmlFor="vendor" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Vendor/Payee
+          </label>
+          <input
+            type="text"
+            id="vendor"
+            value={formData.vendor}
+            onChange={(e) => handleInputChange('vendor', e.target.value)}
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
+              errors.vendor ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
+            }`}
+            placeholder="Enter vendor or payee name"
+          />
+          {errors.vendor && <p className="text-red-500 text-sm mt-1">{errors.vendor}</p>}
         </div>
 
         {/* Date Picker */}

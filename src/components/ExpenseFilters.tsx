@@ -4,6 +4,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { Search, Filter } from 'lucide-react';
 import { ExpenseCategory, ExpenseFilters } from '@/types';
+import { useExpenses } from '@/hooks/useExpenses';
 import 'react-datepicker/dist/react-datepicker.css';
 
 interface ExpenseFiltersProps {
@@ -14,6 +15,11 @@ interface ExpenseFiltersProps {
 const CATEGORIES: (ExpenseCategory | 'All')[] = ['All', 'Food', 'Transportation', 'Entertainment', 'Shopping', 'Bills', 'Other'];
 
 export const ExpenseFiltersComponent: React.FC<ExpenseFiltersProps> = ({ filters, onFiltersChange }) => {
+  const { expenses } = useExpenses();
+  
+  // Get unique vendors from all expenses
+  const vendors = Array.from(new Set(expenses.map(expense => expense.vendor).filter(Boolean))).sort();
+  
   const updateFilter = (key: keyof ExpenseFilters, value: string | Date | undefined | null) => {
     onFiltersChange({ ...filters, [key]: value || undefined });
   };
@@ -25,7 +31,7 @@ export const ExpenseFiltersComponent: React.FC<ExpenseFiltersProps> = ({ filters
         <h3 className="text-lg font-medium text-gray-900 dark:text-white">Filters</h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         {/* Search Input */}
         <div>
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -58,6 +64,26 @@ export const ExpenseFiltersComponent: React.FC<ExpenseFiltersProps> = ({ filters
             {CATEGORIES.map(category => (
               <option key={category} value={category}>
                 {category}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Vendor Filter */}
+        <div>
+          <label htmlFor="vendor-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            Vendor
+          </label>
+          <select
+            id="vendor-filter"
+            value={filters.vendor || ''}
+            onChange={(e) => updateFilter('vendor', e.target.value || undefined)}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          >
+            <option value="">All Vendors</option>
+            {vendors.map(vendor => (
+              <option key={vendor} value={vendor}>
+                {vendor}
               </option>
             ))}
           </select>
@@ -96,7 +122,7 @@ export const ExpenseFiltersComponent: React.FC<ExpenseFiltersProps> = ({ filters
       </div>
 
       {/* Clear Filters Button */}
-      {(filters.searchQuery || filters.category || filters.dateFrom || filters.dateTo) && (
+      {(filters.searchQuery || filters.category || filters.vendor || filters.dateFrom || filters.dateTo) && (
         <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-600">
           <button
             onClick={() => onFiltersChange({})}

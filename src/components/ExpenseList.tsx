@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Edit2, Trash2, Calendar, Tag } from 'lucide-react';
+import { Edit2, Trash2, Calendar, Tag, Store } from 'lucide-react';
 import { Expense, ExpenseFilters } from '@/types';
 import { useExpenses } from '@/hooks/useExpenses';
 import { formatCurrency, formatDate, getCategoryColor } from '@/lib';
@@ -99,6 +99,9 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                     >
                       Category {getSortIcon('category')}
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      Vendor
+                    </th>
                     <th
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('amount')}
@@ -123,6 +126,9 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(expense.category)}`}>
                           {expense.category}
                         </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
+                        {expense.vendor}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {formatCurrency(expense.amount)}
@@ -168,6 +174,10 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         <div className="flex items-center gap-1">
                           <Tag className="h-3 w-3" />
                           {expense.category}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Store className="h-3 w-3" />
+                          {expense.vendor}
                         </div>
                       </div>
                     </div>

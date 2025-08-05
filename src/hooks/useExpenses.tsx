@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Expense, ExpenseContextType, ExpenseFilters, ExpenseSummary, ExpenseCategory } from '@/types';
+import { Expense, ExpenseContextType, ExpenseFilters, ExpenseSummary, ExpenseCategory, VendorStats, VendorSummary } from '@/types';
 import { storage, generateId } from '@/lib';
 import { startOfMonth, endOfMonth, isWithinInterval, parseISO } from 'date-fns';
 
@@ -72,14 +72,20 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
         }
       }
 
+      // Vendor filter
+      if (filters.vendor && expense.vendor.toLowerCase() !== filters.vendor.toLowerCase()) {
+        return false;
+      }
+
       // Search query filter
       if (filters.searchQuery) {
         const query = filters.searchQuery.toLowerCase();
         const matchesDescription = expense.description.toLowerCase().includes(query);
         const matchesCategory = expense.category.toLowerCase().includes(query);
         const matchesAmount = expense.amount.toString().includes(query);
+        const matchesVendor = expense.vendor.toLowerCase().includes(query);
         
-        if (!matchesDescription && !matchesCategory && !matchesAmount) {
+        if (!matchesDescription && !matchesCategory && !matchesAmount && !matchesVendor) {
           return false;
         }
       }
@@ -129,6 +135,68 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
     };
   };
 
+  const getVendorStats = (): VendorStats => {
+    // Group expenses by vendor
+    const vendorGroups = expenses.reduce((groups, expense) => {
+      const vendor = expense.vendor.trim();
+      if (!groups[vendor]) {
+        groups[vendor] = [];
+      }
+      groups[vendor].push(expense);
+      return groups;
+    }, {} as Record<string, Expense[]>);
+
+    // Calculate vendor summaries
+    const vendorSummaries: VendorSummary[] = Object.entries(vendorGroups).map(([vendor, vendorExpenses]) => {
+      const totalAmount = vendorExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+      const transactionCount = vendorExpenses.length;
+      const averageAmount = totalAmount / transactionCount;
+      
+      // Get category breakdown for this vendor
+      const categories: Record<ExpenseCategory, number> = {
+        Food: 0,
+        Transportation: 0,
+        Entertainment: 0,
+        Shopping: 0,
+        Bills: 0,
+        Other: 0,
+      };
+      
+      vendorExpenses.forEach(expense => {
+        categories[expense.category] += expense.amount;
+      });
+
+      // Find the most recent transaction date
+      const lastTransactionDate = vendorExpenses
+        .map(expense => expense.date)
+        .sort()
+        .reverse()[0];
+
+      return {
+        vendor,
+        totalAmount,
+        transactionCount,
+        averageAmount,
+        categories,
+        lastTransactionDate,
+      };
+    });
+
+    // Sort by total amount (descending)
+    vendorSummaries.sort((a, b) => b.totalAmount - a.totalAmount);
+
+    const totalVendors = vendorSummaries.length;
+    const topVendor = vendorSummaries.length > 0 ? vendorSummaries[0] : null;
+    const totalSpent = vendorSummaries.reduce((sum, vendor) => sum + vendor.totalAmount, 0);
+
+    return {
+      totalVendors,
+      topVendor,
+      vendorSummaries,
+      totalSpent,
+    };
+  };
+
   const value: ExpenseContextType = {
     expenses,
     addExpense,
@@ -136,6 +204,7 @@ export const ExpenseProvider: React.FC<ExpenseProviderProps> = ({ children }) =>
     deleteExpense,
     getFilteredExpenses,
     getSummary,
+    getVendorStats,
   };
 
   return <ExpenseContext.Provider value={value}>{children}</ExpenseContext.Provider>;

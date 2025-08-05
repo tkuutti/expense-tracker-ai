@@ -6,3 +6,4 @@ export { ExportButton } from './ExportButton';
 export { CloudExportButton } from './CloudExportButton';
 export { Navigation } from './Navigation';
 export { ThemeToggle } from './ThemeToggle';
+export { TopVendors } from './TopVendors';
