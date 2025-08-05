@@ -35,6 +35,9 @@ dev.log
 dev-clean.log
 dev-server.log
 
+# screenshot server virtual environment
+screenshot_env/
+
 # env files (can opt-in for committing if needed)
 .env*
 
