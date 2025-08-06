@@ -49,12 +49,12 @@ export const isValidFinishNumber = (value: string): boolean => {
 
 export const getCategoryColor = (category: ExpenseCategory): string => {
   const colors: Record<ExpenseCategory, string> = {
-    Food: 'bg-orange-100 text-orange-800',
-    Transportation: 'bg-blue-100 text-blue-800',
-    Entertainment: 'bg-purple-100 text-purple-800',
-    Shopping: 'bg-pink-100 text-pink-800',
-    Bills: 'bg-red-100 text-red-800',
-    Other: 'bg-gray-100 text-gray-800',
+    Food: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
+    Transportation: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+    Entertainment: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+    Shopping: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
+    Bills: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+    Other: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200',
   };
   return colors[category];
 };

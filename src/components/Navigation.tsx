@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { BarChart3, List, Plus, DollarSign, Store, PieChart } from 'lucide-react';
+import { BarChart3, List, Plus, DollarSign, Store, PieChart, TrendingUp } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
 interface NavigationProps {
-  activeTab: 'dashboard' | 'categories' | 'expenses' | 'vendors' | 'add';
-  onTabChange: (tab: 'dashboard' | 'categories' | 'expenses' | 'vendors' | 'add') => void;
+  activeTab: 'dashboard' | 'categories' | 'expenses' | 'vendors' | 'insights' | 'add';
+  onTabChange: (tab: 'dashboard' | 'categories' | 'expenses' | 'vendors' | 'insights' | 'add') => void;
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
@@ -15,6 +15,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
     { id: 'categories' as const, label: 'Categories', icon: PieChart },
     { id: 'expenses' as const, label: 'Expenses', icon: List },
     { id: 'vendors' as const, label: 'Top Vendors', icon: Store },
+    { id: 'insights' as const, label: 'Insights', icon: TrendingUp },
     { id: 'add' as const, label: 'Add Expense', icon: Plus },
   ];
 

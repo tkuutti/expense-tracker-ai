@@ -22,11 +22,17 @@ export const TopVendors: React.FC = () => {
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [selectedVendor, setSelectedVendor] = useState<VendorSummary | null>(null);
 
-  const topVendorsData = vendorStats.vendorSummaries.slice(0, 10).map(vendor => ({
-    name: vendor.vendor,
-    amount: vendor.totalAmount,
-    transactions: vendor.transactionCount,
-  }));
+  // Filter out "Unknown" vendors and get top 10 with actual vendor names
+  const topVendorsData = vendorStats.vendorSummaries
+    .filter(vendor => vendor.vendor !== 'Unknown' && vendor.vendor.trim() !== '')
+    .slice(0, 10)
+    .map(vendor => ({
+      name: vendor.vendor,
+      amount: vendor.totalAmount,
+      transactions: vendor.transactionCount,
+    }));
+
+
 
   const StatCard: React.FC<{
     title: string;
@@ -214,23 +220,20 @@ export const TopVendors: React.FC = () => {
       </div>
 
       {/* Top Vendors Chart */}
-      {topVendorsData.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 10 Vendors by Spending</h3>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 10 Vendors by Spending</h3>
+        {topVendorsData.length > 0 ? (
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={topVendorsData} layout="horizontal">
+              <BarChart data={topVendorsData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#374151" opacity={0.3} />
                 <XAxis 
-                  type="number"
-                  tickFormatter={(value) => `${value}€`}
+                  dataKey="name"
                   fontSize={12}
                   stroke="#6b7280"
                 />
                 <YAxis 
-                  type="category"
-                  dataKey="name"
-                  width={100}
+                  tickFormatter={(value) => `€${value.toFixed(0)}`}
                   fontSize={12}
                   stroke="#6b7280"
                 />
@@ -238,13 +241,22 @@ export const TopVendors: React.FC = () => {
                 <Bar 
                   dataKey="amount" 
                   fill="#3b82f6"
-                  radius={[0, 4, 4, 0]}
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="h-80 flex flex-col items-center justify-center text-center">
+            <BarChart3 className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
+            <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No vendor data available</h4>
+            <p className="text-gray-500 dark:text-gray-400 max-w-md">
+              Add vendor information to your expenses to see the top vendors chart. 
+              You can edit existing expenses or add new ones with vendor details.
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Vendors List */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">

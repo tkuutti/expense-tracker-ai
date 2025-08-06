@@ -76,16 +76,16 @@ describe('TopVendors Component', () => {
     expect(screen.getByText('Total Spent')).toBeInTheDocument();
     expect(screen.getByText('70,50 €')).toBeInTheDocument(); // Total spent
     expect(screen.getByText('Top Vendor')).toBeInTheDocument();
-    expect(screen.getByText('Cafe Central')).toBeInTheDocument(); // Top vendor name
+    expect(screen.getAllByText('Cafe Central')[0]).toBeInTheDocument(); // Top vendor name
   });
 
   test('displays vendor list correctly', () => {
     render(<TopVendors />, { wrapper: Wrapper });
 
     expect(screen.getByText('All Vendors')).toBeInTheDocument();
-    expect(screen.getByText('Cafe Central')).toBeInTheDocument();
+    expect(screen.getAllByText('Cafe Central')).toHaveLength(2); // Appears in stats and list
     expect(screen.getByText('Public Transit')).toBeInTheDocument();
-    expect(screen.getByText('55,50 €')).toBeInTheDocument(); // Cafe Central total
+    expect(screen.getAllByText('55,50 €')).toHaveLength(2); // Appears in stats and list
     expect(screen.getByText('15,00 €')).toBeInTheDocument(); // Public Transit total
   });
 
@@ -138,5 +138,7 @@ describe('TopVendors Component', () => {
 
     expect(screen.getByText('No vendors yet')).toBeInTheDocument();
     expect(screen.getByText('Start adding expenses with vendor information to see vendor analytics here.')).toBeInTheDocument();
+    // Also check for the chart empty state
+    expect(screen.getByText('No vendor data available')).toBeInTheDocument();
   });
 });
