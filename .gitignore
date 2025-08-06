@@ -38,6 +38,9 @@ dev-server.log
 # screenshot server virtual environment
 screenshot_env/
 
+# local history (VS Code extension)
+.history/
+
 # env files (can opt-in for committing if needed)
 .env*
 
