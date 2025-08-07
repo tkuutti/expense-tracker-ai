@@ -24,6 +24,9 @@ export const generateId = (): string => {
 export const parseFinishNumber = (value: string): number => {
   if (!value || value.trim() === '') return 0;
   
+  // First validate the format
+  if (!isValidFinishNumber(value)) return 0;
+  
   // Replace comma with dot for parsing
   const normalizedValue = value.replace(',', '.');
   const parsed = parseFloat(normalizedValue);
