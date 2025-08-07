@@ -3,6 +3,7 @@
 import React from 'react';
 import { PieChart as RechartsPieChart, Cell, ResponsiveContainer, Pie, Tooltip } from 'recharts';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { formatCurrency } from '@/lib';
 import { ExpenseCategory } from '@/types';
 
@@ -26,12 +27,26 @@ const CATEGORY_ICONS = {
 
 export const MonthlyInsights: React.FC = () => {
   const { getSummary } = useExpenses();
+  const { t } = useLanguage();
   const summary = getSummary();
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExpenseCategory): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
 
   const pieChartData = Object.entries(summary.categorySummary)
     .filter(([, amount]) => amount > 0)
     .map(([category, amount]) => ({
-      name: category,
+      name: getCategoryName(category as ExpenseCategory),
       value: amount,
       color: CATEGORY_COLORS[category as ExpenseCategory],
     }));
@@ -60,8 +75,8 @@ export const MonthlyInsights: React.FC = () => {
     return (
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
         <div className="text-6xl mb-4">📊</div>
-        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No insights yet</h3>
-        <p className="text-gray-500 dark:text-gray-400">Start adding expenses to see your monthly insights here.</p>
+        <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('noExpenses')}</h3>
+        <p className="text-gray-500 dark:text-gray-400">{t('startAddingExpenses')}</p>
       </div>
     );
   }
@@ -70,7 +85,7 @@ export const MonthlyInsights: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-8 p-6">
       {/* Header */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Monthly Insights</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{t('monthlyInsights')}</h1>
       </div>
 
       {/* Main Content */}
@@ -105,7 +120,7 @@ export const MonthlyInsights: React.FC = () => {
               {/* Center Label */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="bg-white dark:bg-gray-800 px-3 py-1 rounded-lg border-2 border-gray-800 dark:border-white">
-                  <span className="text-sm font-semibold text-gray-800 dark:text-white">Spending</span>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-white">{t('spending')}</span>
                 </div>
               </div>
               
@@ -124,7 +139,7 @@ export const MonthlyInsights: React.FC = () => {
                   <span className="text-2xl">{CATEGORY_ICONS[category as ExpenseCategory]}</span>
                   <div className="flex-1">
                     <div className="font-semibold text-gray-900 dark:text-white">
-                      {category}: {formatCurrency(amount)}
+                      {getCategoryName(category as ExpenseCategory)}: {formatCurrency(amount)}
                     </div>
                   </div>
                 </div>
@@ -136,9 +151,9 @@ export const MonthlyInsights: React.FC = () => {
         {/* Budget Streak Section */}
         <div className="mt-8">
           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-6 text-center">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">Budget Streak</h2>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">{t('budgetStreak')}</h2>
             <div className="text-5xl font-bold text-green-600 dark:text-green-400 mb-2">{budgetStreak}</div>
-            <div className="text-base text-gray-600 dark:text-gray-400 mb-4">days</div>
+            <div className="text-base text-gray-600 dark:text-gray-400 mb-4">{t('days')}</div>
             
             {/* Progress indicator */}
             <div className="flex justify-center">

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Edit2, Trash2, Calendar, Tag, Store } from 'lucide-react';
 import { Expense, ExpenseFilters } from '@/types';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { formatCurrency, formatDate, getCategoryColor } from '@/lib';
 import { ExpenseFiltersComponent } from './ExpenseFilters';
 
@@ -13,7 +14,21 @@ interface ExpenseListProps {
 
 export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
   const { getFilteredExpenses, deleteExpense } = useExpenses();
+  const { t } = useLanguage();
   const [filters, setFilters] = useState<ExpenseFilters>({});
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: string): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
   const [sortBy, setSortBy] = useState<'date' | 'amount' | 'category'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
@@ -47,7 +62,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
   };
 
   const handleDelete = (expense: Expense) => {
-    if (window.confirm(`Are you sure you want to delete "${expense.description}"?`)) {
+    if (window.confirm(`${t('confirmDelete')} "${expense.description}"?`)) {
       deleteExpense(expense.id);
     }
   };
@@ -65,17 +80,17 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              Expenses ({sortedExpenses.length})
+              {t('expenses')} ({sortedExpenses.length})
             </h2>
             <div className="text-sm text-gray-600 dark:text-gray-400">
-              Total: {formatCurrency(sortedExpenses.reduce((sum, expense) => sum + expense.amount, 0))}
+              {t('total')}: {formatCurrency(sortedExpenses.reduce((sum, expense) => sum + expense.amount, 0))}
             </div>
           </div>
         </div>
 
         {sortedExpenses.length === 0 ? (
           <div className="px-6 py-8 text-center">
-            <p className="text-gray-500 dark:text-gray-400">No expenses found matching your criteria.</p>
+            <p className="text-gray-500 dark:text-gray-400">{t('noExpensesFoundCriteria')}</p>
           </div>
         ) : (
           <>
@@ -88,28 +103,28 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('date')}
                     >
-                      Date {getSortIcon('date')}
+                      {t('dateLabel')} {getSortIcon('date')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Description
+                      {t('descriptionLabel')}
                     </th>
                     <th
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('category')}
                     >
-                      Category {getSortIcon('category')}
+                      {t('categoryLabel')} {getSortIcon('category')}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Vendor
+                      {t('vendorLabel')}
                     </th>
                     <th
                       className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600"
                       onClick={() => handleSort('amount')}
                     >
-                      Amount {getSortIcon('amount')}
+                      {t('amountLabel')} {getSortIcon('amount')}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                      Actions
+                      {t('actions')}
                     </th>
                   </tr>
                 </thead>
@@ -124,11 +139,11 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(expense.category)}`}>
-                          {expense.category}
+                          {getCategoryName(expense.category)}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                        {expense.vendor || 'Unknown'}
+                        {expense.vendor || t('unknown')}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                         {formatCurrency(expense.amount)}
@@ -139,7 +154,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                             <button
                               onClick={() => onEditExpense(expense)}
                               className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1"
-                              title="Edit expense"
+                              title={t('editExpense')}
                             >
                               <Edit2 className="h-4 w-4" />
                             </button>
@@ -147,7 +162,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                           <button
                             onClick={() => handleDelete(expense)}
                             className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1"
-                            title="Delete expense"
+                            title={t('deleteExpense')}
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -173,11 +188,11 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         </div>
                         <div className="flex items-center gap-1">
                           <Tag className="h-3 w-3" />
-                          {expense.category}
+                          {getCategoryName(expense.category)}
                         </div>
                         <div className="flex items-center gap-1">
                           <Store className="h-3 w-3" />
-                          {expense.vendor || 'Unknown'}
+                          {expense.vendor || t('unknown')}
                         </div>
                       </div>
                     </div>
@@ -190,7 +205,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                           <button
                             onClick={() => onEditExpense(expense)}
                             className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 p-1"
-                            title="Edit expense"
+                            title={t('editExpense')}
                           >
                             <Edit2 className="h-3 w-3" />
                           </button>
@@ -198,7 +213,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                         <button
                           onClick={() => handleDelete(expense)}
                           className="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300 p-1"
-                          title="Delete expense"
+                          title={t('deleteExpense')}
                         >
                           <Trash2 className="h-3 w-3" />
                         </button>
@@ -206,7 +221,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({ onEditExpense }) => {
                     </div>
                   </div>
                   <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(expense.category)}`}>
-                    {expense.category}
+                    {getCategoryName(expense.category)}
                   </span>
                 </div>
               ))}

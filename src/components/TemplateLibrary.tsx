@@ -16,6 +16,7 @@ import {
   Share2
 } from 'lucide-react';
 import { ExportTemplate, TemplateCategory } from '@/types';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface TemplateLibraryProps {
   onTemplateSelect?: (template: ExportTemplate) => void;
@@ -26,6 +27,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
   onTemplateSelect,
   onTemplatePreview
 }) => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<TemplateCategory | 'all'>('all');
 
@@ -202,12 +204,12 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
   ];
 
   const categories: { type: TemplateCategory | 'all'; label: string; icon: React.ReactNode; count: number }[] = [
-    { type: 'all', label: 'All Templates', icon: <Sparkles className="h-4 w-4" />, count: templates.length },
-    { type: 'tax', label: 'Tax Reports', icon: <FileText className="h-4 w-4" />, count: templates.filter(t => t.category === 'tax').length },
-    { type: 'business', label: 'Business', icon: <Building className="h-4 w-4" />, count: templates.filter(t => t.category === 'business').length },
-    { type: 'financial', label: 'Financial', icon: <DollarSign className="h-4 w-4" />, count: templates.filter(t => t.category === 'financial').length },
-    { type: 'personal', label: 'Personal', icon: <Heart className="h-4 w-4" />, count: templates.filter(t => t.category === 'personal').length },
-    { type: 'compliance', label: 'Compliance', icon: <FileText className="h-4 w-4" />, count: templates.filter(t => t.category === 'compliance').length },
+    { type: 'all', label: t('allTemplates'), icon: <Sparkles className="h-4 w-4" />, count: templates.length },
+    { type: 'tax', label: t('taxReports'), icon: <FileText className="h-4 w-4" />, count: templates.filter(t => t.category === 'tax').length },
+    { type: 'business', label: t('business'), icon: <Building className="h-4 w-4" />, count: templates.filter(t => t.category === 'business').length },
+    { type: 'financial', label: t('financial'), icon: <DollarSign className="h-4 w-4" />, count: templates.filter(t => t.category === 'financial').length },
+    { type: 'personal', label: t('personal'), icon: <Heart className="h-4 w-4" />, count: templates.filter(t => t.category === 'personal').length },
+    { type: 'compliance', label: t('compliance'), icon: <FileText className="h-4 w-4" />, count: templates.filter(t => t.category === 'compliance').length },
   ];
 
   const filteredTemplates = templates.filter(template => {
@@ -251,10 +253,10 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
       {/* Header */}
       <div className="text-center">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Export Template Library
+          {t('exportTemplateLibrary')}
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          Professional templates designed for specific use cases and industries
+          {t('professionalTemplatesDesigned')}
         </p>
       </div>
 
@@ -264,7 +266,7 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search templates..."
+            placeholder={t('searchTemplates')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -359,19 +361,19 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
                 <button
                   onClick={() => handlePreviewTemplate(template)}
                   className="p-2 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
-                  title="Preview template"
+                  title={t('previewTemplate')}
                 >
                   <Eye className="h-4 w-4" />
                 </button>
                 <button
                   className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
-                  title="Add to favorites"
+                  title={t('addToFavorites')}
                 >
                   <Heart className="h-4 w-4" />
                 </button>
                 <button
                   className="p-2 text-gray-400 hover:text-green-500 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
-                  title="Share template"
+                  title={t('shareTemplate')}
                 >
                   <Share2 className="h-4 w-4" />
                 </button>
@@ -402,14 +404,14 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
                 className="flex-1 py-2 px-4 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium flex items-center justify-center space-x-2"
               >
                 <Eye className="h-4 w-4" />
-                <span>Preview</span>
+                <span>{t('preview')}</span>
               </button>
               <button
                 onClick={() => handleUseTemplate(template)}
                 className="flex-1 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors text-sm font-medium flex items-center justify-center space-x-2"
               >
                 <Play className="h-4 w-4" />
-                <span>Use Template</span>
+                <span>{t('useTemplate')}</span>
               </button>
             </div>
 
@@ -424,10 +426,10 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
         <div className="text-center py-12">
           <div className="text-6xl mb-4">📋</div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            No templates found
+            {t('noTemplatesFound')}
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Try adjusting your search or browse different categories
+            {t('tryAdjustingSearchCategories')}
           </p>
         </div>
       )}
@@ -436,17 +438,17 @@ export const TemplateLibrary: React.FC<TemplateLibraryProps> = ({
       <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-xl p-6 text-center">
         <div className="flex items-center justify-center space-x-2 mb-3">
           <Users className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-          <span className="text-xl font-bold text-gray-900 dark:text-white">Community Templates</span>
+          <span className="text-xl font-bold text-gray-900 dark:text-white">{t('communityTemplates')}</span>
         </div>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
-          Create custom templates and share them with the community. Earn points and recognition for popular templates.
+          {t('createCustomTemplates')}
         </p>
         <div className="flex justify-center space-x-3">
           <button className="px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors text-sm font-medium">
-            Browse Community
+            {t('browseCommunity')}
           </button>
           <button className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm font-medium">
-            Create Template
+            {t('createTemplate')}
           </button>
         </div>
       </div>

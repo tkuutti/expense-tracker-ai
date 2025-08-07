@@ -3,6 +3,8 @@
 import React from 'react';
 import { BarChart3, List, Plus, DollarSign, Store, PieChart, TrendingUp } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSelector } from './LanguageSelector';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface NavigationProps {
   activeTab: 'dashboard' | 'categories' | 'expenses' | 'vendors' | 'insights' | 'add';
@@ -10,13 +12,15 @@ interface NavigationProps {
 }
 
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
+  const { t } = useLanguage();
+  
   const tabs = [
-    { id: 'dashboard' as const, label: 'Dashboard', icon: BarChart3 },
-    { id: 'categories' as const, label: 'Categories', icon: PieChart },
-    { id: 'expenses' as const, label: 'Expenses', icon: List },
-    { id: 'vendors' as const, label: 'Top Vendors', icon: Store },
-    { id: 'insights' as const, label: 'Insights', icon: TrendingUp },
-    { id: 'add' as const, label: 'Add Expense', icon: Plus },
+    { id: 'dashboard' as const, label: t('dashboard'), icon: BarChart3 },
+    { id: 'categories' as const, label: t('categories'), icon: PieChart },
+    { id: 'expenses' as const, label: t('expenses'), icon: List },
+    { id: 'vendors' as const, label: t('topVendors'), icon: Store },
+    { id: 'insights' as const, label: t('insights'), icon: TrendingUp },
+    { id: 'add' as const, label: t('addExpense'), icon: Plus },
   ];
 
   return (
@@ -28,10 +32,10 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
             <div className="bg-blue-600 dark:bg-blue-500 p-2 rounded-lg">
               <DollarSign className="h-6 w-6 text-white" />
             </div>
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">Expense Tracker</h1>
+            <h1 className="text-xl font-bold text-gray-900 dark:text-white">{t('appTitle')}</h1>
           </div>
 
-          {/* Navigation Tabs and Theme Toggle */}
+          {/* Navigation Tabs, Language Selector, and Theme Toggle */}
           <div className="flex items-center gap-4">
             <div className="flex space-x-1">
               {tabs.map(tab => {
@@ -54,6 +58,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
                 );
               })}
             </div>
+            <LanguageSelector />
             <ThemeToggle />
           </div>
         </div>

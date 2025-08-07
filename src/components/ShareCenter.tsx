@@ -34,6 +34,7 @@ import {
   MoreHorizontal
 } from 'lucide-react';
 import { ShareSettings, TeamMember, PermissionLevel } from '@/types';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ShareCenterProps {
   exportData?: {
@@ -56,6 +57,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
   },
   onShareCreate
 }) => {
+  const { t } = useLanguage();
   const [shareSettings, setShareSettings] = useState<ShareSettings>({
     id: 'share-' + Math.random().toString(36).substr(2, 9),
     isPublic: false,
@@ -140,7 +142,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
 
   const handleInviteTeamMember = () => {
     if (inviteEmail) {
-      alert(`Invitation sent to ${inviteEmail}`);
+      alert(`${t('invitationSentTo')} ${inviteEmail}`);
       setInviteEmail('');
     }
   };
@@ -172,10 +174,10 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
       <div className="text-center">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex items-center justify-center">
           <Share2 className="h-6 w-6 mr-3 text-blue-500" />
-          Share & Collaborate
+          {t('shareAndCollaborate')}
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          Generate secure links, QR codes, and collaborate with your team
+          {t('generateSecureLinks')}
         </p>
       </div>
 
@@ -188,12 +190,12 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
           <div className="flex-1">
             <h4 className="font-semibold text-gray-900 dark:text-white">{exportData.name}</h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              {exportData.recordCount} expenses • {exportData.format.toUpperCase()} • {exportData.createdAt.toLocaleDateString()}
+              {exportData.recordCount} {t('expenses')} • {exportData.format.toUpperCase()} • {exportData.createdAt.toLocaleDateString()}
             </p>
           </div>
           <div className="text-right">
             <div className="text-sm text-gray-500 dark:text-gray-400">
-              {shareSettings.viewCount} views • {shareSettings.downloadCount} downloads
+              {shareSettings.viewCount} {t('views')} • {shareSettings.downloadCount} {t('downloads')}
             </div>
           </div>
         </div>
@@ -204,7 +206,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
         <div className="space-y-4">
           <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
             <Link className="h-5 w-5 mr-2 text-blue-500" />
-            Shareable Link
+            {t('shareableLink')}
           </h4>
 
           {/* Link Settings */}
@@ -220,7 +222,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                     <Globe className="h-4 w-4 mr-1" />
-                    Public access
+                    {t('publicAccess')}
                   </span>
                 </label>
               </div>
@@ -234,7 +236,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                     <Download className="h-4 w-4 mr-1" />
-                    Allow download
+                    {t('allowDownload')}
                   </span>
                 </label>
               </div>
@@ -248,7 +250,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                   />
                   <span className="text-sm text-gray-700 dark:text-gray-300 flex items-center">
                     <Mail className="h-4 w-4 mr-1" />
-                    Allow comments
+                    {t('allowComments')}
                   </span>
                 </label>
               </div>
@@ -258,9 +260,9 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                   onChange={(e) => setShareSettings({...shareSettings, permissions: e.target.value as PermissionLevel})}
                   className="w-full px-3 py-1 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                 >
-                  <option value="view">View only</option>
-                  <option value="comment">Can comment</option>
-                  <option value="edit">Can edit</option>
+                  <option value="view">{t('viewOnly')}</option>
+                  <option value="comment">{t('canComment')}</option>
+                  <option value="edit">{t('canEdit')}</option>
                 </select>
               </div>
             </div>
@@ -270,7 +272,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
               <input
                 ref={linkInputRef}
                 type="text"
-                value={shareUrl || 'Generate link to see URL'}
+                value={shareUrl || t('generateLinkToSeeUrl')}
                 readOnly
                 className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm"
               />
@@ -279,7 +281,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center space-x-2"
               >
                 {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                <span>{copied ? 'Copied!' : 'Copy'}</span>
+                <span>{copied ? t('copied') : t('copy')}</span>
               </button>
             </div>
 
@@ -287,7 +289,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
               onClick={handleCreateShareLink}
               className="w-full py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors font-medium"
             >
-              Generate Secure Link
+              {t('generateSecureLink')}
             </button>
           </div>
 
@@ -296,13 +298,13 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
             <div className="flex items-center justify-between mb-4">
               <h5 className="font-medium text-gray-900 dark:text-white flex items-center">
                 <QrCode className="h-5 w-5 mr-2 text-blue-500" />
-                QR Code
+                {t('qrCode')}
               </h5>
               <button
                 onClick={() => setQrVisible(!qrVisible)}
                 className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
               >
-                {qrVisible ? 'Hide' : 'Show'}
+                {qrVisible ? t('hide') : t('show')}
               </button>
             </div>
 
@@ -317,10 +319,10 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                   />
                 </div>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Scan to access report on mobile devices
+                  {t('scanToAccessReport')}
                 </p>
                 <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300">
-                  Download QR Code
+                  {t('downloadQRCode')}
                 </button>
               </div>
             )}
@@ -331,12 +333,12 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
         <div className="space-y-4">
           <h4 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center">
             <Users className="h-5 w-5 mr-2 text-blue-500" />
-            Share & Collaborate
+            {t('shareAndCollaborate')}
           </h4>
 
           {/* Social Media Sharing */}
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h5 className="font-medium text-gray-900 dark:text-white mb-3">Social Media</h5>
+            <h5 className="font-medium text-gray-900 dark:text-white mb-3">{t('socialMedia')}</h5>
             <div className="grid grid-cols-3 gap-3">
               <TwitterShareButton
                 url={shareUrl || generateShareUrl()}
@@ -403,7 +405,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
 
           {/* Team Collaboration */}
           <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h5 className="font-medium text-gray-900 dark:text-white mb-3">Team Members</h5>
+            <h5 className="font-medium text-gray-900 dark:text-white mb-3">{t('teamMembers')}</h5>
             
             {/* Invite Input */}
             <div className="flex space-x-2 mb-4">
@@ -411,7 +413,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="Enter email to invite..."
+                placeholder={t('enterEmailToInvite')}
                 className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm"
               />
               <button
@@ -420,7 +422,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                 className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white rounded-md transition-colors flex items-center space-x-2"
               >
                 <UserPlus className="h-4 w-4" />
-                <span>Invite</span>
+                <span>{t('invite')}</span>
               </button>
             </div>
 
@@ -439,7 +441,7 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
                       <p className="font-medium text-gray-900 dark:text-white">{member.name}</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
                       <p className="text-xs text-gray-400 dark:text-gray-500">
-                        Last active {member.lastActive ? formatTimeAgo(member.lastActive) : 'Never'}
+                        {t('lastActive')} {member.lastActive ? formatTimeAgo(member.lastActive) : t('never')}
                       </p>
                     </div>
                   </div>
@@ -463,24 +465,24 @@ export const ShareCenter: React.FC<ShareCenterProps> = ({
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
         <h5 className="font-medium text-gray-900 dark:text-white mb-4 flex items-center">
           <Settings className="h-5 w-5 mr-2 text-blue-500" />
-          Share Analytics
+          {t('shareAnalytics')}
         </h5>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">247</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Total Views</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('totalViews')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600 dark:text-green-400">89</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Downloads</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('downloads')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">23</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Comments</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('comments')}</div>
           </div>
           <div className="text-center">
             <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">5</div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">Shares</div>
+            <div className="text-sm text-gray-600 dark:text-gray-400">{t('shares')}</div>
           </div>
         </div>
       </div>

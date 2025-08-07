@@ -5,6 +5,7 @@ import DatePicker from 'react-datepicker';
 import { Plus } from 'lucide-react';
 import { ExpenseCategory, ExpenseFormData } from '@/types';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { parseFinishNumber, isValidFinishNumber, formatFinishNumber } from '@/lib';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -24,6 +25,20 @@ const CATEGORIES: ExpenseCategory[] = ['Food', 'Transportation', 'Entertainment'
 
 export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpense }) => {
   const { addExpense, updateExpense } = useExpenses();
+  const { t } = useLanguage();
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExpenseCategory): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
   
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: editingExpense?.amount ? formatFinishNumber(editingExpense.amount) : '',
@@ -40,29 +55,29 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
 
     // Amount validation with Finnish format support
     if (!formData.amount || formData.amount.trim() === '') {
-      newErrors.amount = 'Please enter an amount';
+      newErrors.amount = t('pleaseEnterAmount');
     } else if (!isValidFinishNumber(formData.amount)) {
-      newErrors.amount = 'Please enter a valid amount (e.g., 15,50)';
+      newErrors.amount = t('pleaseEnterValidAmount');
     } else {
       const amount = parseFinishNumber(formData.amount);
       if (amount <= 0) {
-        newErrors.amount = 'Amount must be greater than 0';
+        newErrors.amount = t('amountMustBePositive');
       }
     }
 
     // Description validation
     if (!formData.description.trim()) {
-      newErrors.description = 'Please enter a description';
+      newErrors.description = t('pleaseEnterDescription');
     }
 
     // Vendor validation
     if (!formData.vendor?.trim()) {
-      newErrors.vendor = 'Please enter a vendor/payee';
+      newErrors.vendor = t('pleaseEnterVendor');
     }
 
     // Date validation
     if (!formData.date) {
-      newErrors.date = 'Please select a date';
+      newErrors.date = t('pleaseSelectDate');
     }
 
     setErrors(newErrors);
@@ -117,14 +132,14 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-        {editingExpense ? 'Edit Expense' : 'Add New Expense'}
+        {editingExpense ? t('edit') + ' ' + t('expenses') : t('add') + ' ' + t('expenses')}
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Amount Input */}
         <div>
           <label htmlFor="amount" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Amount
+            {t('amount')}
           </label>
           <div className="relative">
             <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400">€</span>
@@ -146,7 +161,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
         {/* Category Select */}
         <div>
           <label htmlFor="category" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Category
+            {t('category')}
           </label>
           <select
             id="category"
@@ -156,7 +171,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
           >
             {CATEGORIES.map(category => (
               <option key={category} value={category}>
-                {category}
+                {getCategoryName(category)}
               </option>
             ))}
           </select>
@@ -165,7 +180,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
         {/* Description Input */}
         <div>
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Description
+            {t('description')}
           </label>
           <input
             type="text"
@@ -175,7 +190,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
               errors.description ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
             }`}
-            placeholder="Enter expense description"
+            placeholder={t('enterExpenseDescription')}
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
         </div>
@@ -183,7 +198,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
         {/* Vendor Input */}
         <div>
           <label htmlFor="vendor" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Vendor/Payee
+            {t('vendor')}
           </label>
           <input
             type="text"
@@ -193,7 +208,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
             className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white ${
               errors.vendor ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
             }`}
-            placeholder="Enter vendor or payee name"
+            placeholder={t('enterVendorName')}
           />
           {errors.vendor && <p className="text-red-500 text-sm mt-1">{errors.vendor}</p>}
         </div>
@@ -201,7 +216,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
         {/* Date Picker */}
         <div>
           <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Date
+            {t('date')}
           </label>
           <DatePicker
             selected={formData.date}
@@ -222,7 +237,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
             className="flex-1 bg-blue-600 dark:bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 flex items-center justify-center gap-2 transition-colors"
           >
             <Plus className="h-4 w-4" />
-            {editingExpense ? 'Update Expense' : 'Add Expense'}
+            {editingExpense ? t('save') : t('add') + ' ' + t('expenses')}
           </button>
           
           {onClose && (
@@ -231,7 +246,7 @@ export const ExpenseForm: React.FC<ExpenseFormProps> = ({ onClose, editingExpens
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
             >
-              Cancel
+              {t('cancel')}
             </button>
           )}
         </div>

@@ -17,6 +17,7 @@ import {
   History
 } from 'lucide-react';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { IntegratedService, ActivityItem, BackgroundJob } from '@/types';
 import { IntegrationMarketplace } from './IntegrationMarketplace';
 import { TemplateLibrary } from './TemplateLibrary';
@@ -29,6 +30,7 @@ interface CloudExportHubProps {
 
 export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose }) => {
   const { expenses } = useExpenses();
+  const { t } = useLanguage();
   const [activeSection, setActiveSection] = useState<'overview' | 'integrations' | 'templates' | 'history' | 'automation'>('overview');
 
   // Mock data for demonstration
@@ -36,11 +38,11 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: 'google-sheets',
       name: 'google-sheets',
-      displayName: 'Google Sheets',
+      displayName: t('googleSheets'),
       type: 'productivity',
       status: 'connected',
       icon: '📊',
-      description: 'Export directly to Google Sheets',
+      description: t('exportDirectlyToGoogleSheets'),
       capabilities: ['real-time-sync', 'auto-format', 'collaboration'],
       lastSync: new Date(),
       connectedAt: new Date(),
@@ -50,11 +52,11 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: 'dropbox',
       name: 'dropbox',
-      displayName: 'Dropbox',
+      displayName: t('dropbox'),
       type: 'storage',
       status: 'connected',
       icon: '📦',
-      description: 'Store exports in your Dropbox',
+      description: t('storeExportsInDropbox'),
       capabilities: ['file-sync', 'version-history', 'sharing'],
       lastSync: new Date(Date.now() - 3600000),
       connectedAt: new Date(),
@@ -63,13 +65,13 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: 'gmail',
       name: 'gmail',
-      displayName: 'Gmail',
+      displayName: t('gmail'),
       type: 'communication',
       status: 'error',
       icon: '✉️',
-      description: 'Email exports automatically',
+      description: t('emailExportsAutomatically'),
       capabilities: ['automated-emails', 'scheduling', 'templates'],
-      errorMessage: 'Authentication expired',
+      errorMessage: t('authenticationExpired'),
       userCount: 2341,
     }
   ];
@@ -78,24 +80,24 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: '1',
       type: 'export',
-      title: 'Monthly Report exported to Google Sheets',
-      description: '127 expenses exported successfully',
+      title: t('monthlyReportExported'),
+      description: `127 ${t('expensesExportedSuccessfully')}`,
       timestamp: new Date(Date.now() - 1800000),
       userId: 'current-user',
     },
     {
       id: '2',
       type: 'share',
-      title: 'Tax Report shared with team',
-      description: 'Shared with 3 team members',
+      title: t('taxReportSharedWithTeam'),
+      description: `${t('sharedWith')} 3 ${t('teamMembers')}`,
       timestamp: new Date(Date.now() - 3600000),
       userId: 'current-user',
     },
     {
       id: '3',
       type: 'connect',
-      title: 'Connected Dropbox',
-      description: 'Successfully connected cloud storage',
+      title: t('connectedDropbox'),
+      description: t('successfullyConnectedStorage'),
       timestamp: new Date(Date.now() - 7200000),
       userId: 'current-user',
     },
@@ -105,8 +107,8 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: '1',
       type: 'export',
-      name: 'Quarterly Financial Report',
-      description: 'Exporting Q4 2024 data to PDF',
+      name: t('quarterlyFinancialReport'),
+      description: t('exportingQ4Data'),
       status: 'running',
       progress: 67,
       startedAt: new Date(Date.now() - 300000),
@@ -118,8 +120,8 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     {
       id: '2',
       type: 'sync',
-      name: 'Google Sheets Sync',
-      description: 'Syncing recent expenses',
+      name: t('googleSheetsSync'),
+      description: t('syncingRecentExpenses'),
       status: 'completed',
       progress: 100,
       startedAt: new Date(Date.now() - 600000),
@@ -151,8 +153,8 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
+    if (minutes < 60) return `${minutes}m ${t('ago')}`;
+    if (hours < 24) return `${hours}h ${t('ago')}`;
     return date.toLocaleDateString();
   };
 
@@ -177,10 +179,10 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Cloud Export Hub
+                  {t('cloudExportHub')}
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Connect, share, and automate your expense data
+                  {t('connectShare')} - {t('automation').toLowerCase()}
                 </p>
               </div>
             </div>
@@ -195,11 +197,11 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
           {/* Navigation Tabs */}
           <div className="flex border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900">
             {[
-              { id: 'overview', label: 'Overview', icon: BarChart3 },
-              { id: 'integrations', label: 'Integrations', icon: Zap },
-              { id: 'templates', label: 'Templates', icon: Plus },
-              { id: 'history', label: 'History', icon: History },
-              { id: 'automation', label: 'Automation', icon: Clock },
+              { id: 'overview', label: t('overview'), icon: BarChart3 },
+              { id: 'integrations', label: t('integrations'), icon: Zap },
+              { id: 'templates', label: t('templates'), icon: Plus },
+              { id: 'history', label: t('history'), icon: History },
+              { id: 'automation', label: t('automation'), icon: Clock },
             ].map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
@@ -230,7 +232,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                         <Zap className="h-5 w-5 text-white" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-blue-600 dark:text-blue-400">Connected Services</p>
+                        <p className="text-sm font-medium text-blue-600 dark:text-blue-400">{t('connectedServices')}</p>
                         <p className="text-2xl font-bold text-blue-900 dark:text-blue-100">
                           {connectedServices.filter(s => s.status === 'connected').length}
                         </p>
@@ -244,7 +246,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                         <Share2 className="h-5 w-5 text-white" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-green-600 dark:text-green-400">Active Shares</p>
+                        <p className="text-sm font-medium text-green-600 dark:text-green-400">{t('activeShares')}</p>
                         <p className="text-2xl font-bold text-green-900 dark:text-green-100">12</p>
                       </div>
                     </div>
@@ -256,7 +258,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                         <Clock className="h-5 w-5 text-white" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-purple-600 dark:text-purple-400">Scheduled Exports</p>
+                        <p className="text-sm font-medium text-purple-600 dark:text-purple-400">{t('scheduledExports')}</p>
                         <p className="text-2xl font-bold text-purple-900 dark:text-purple-100">3</p>
                       </div>
                     </div>
@@ -268,7 +270,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                         <TrendingUp className="h-5 w-5 text-white" />
                       </div>
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-orange-600 dark:text-orange-400">Data Exported</p>
+                        <p className="text-sm font-medium text-orange-600 dark:text-orange-400">{t('dataExported')}</p>
                         <p className="text-2xl font-bold text-orange-900 dark:text-orange-100">{expenses.length}</p>
                       </div>
                     </div>
@@ -279,7 +281,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                     <Zap className="h-5 w-5 mr-2 text-blue-500" />
-                    Service Status
+                    {t('serviceStatus')}
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {connectedServices.map((service) => (
@@ -289,7 +291,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                           <div>
                             <p className="font-medium text-gray-900 dark:text-white">{service.displayName}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {service.userCount?.toLocaleString()} users
+                              {service.userCount?.toLocaleString()} {t('users')}
                             </p>
                           </div>
                         </div>
@@ -300,8 +302,8 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                             service.status === 'error' ? 'text-red-600 dark:text-red-400' :
                             'text-yellow-600 dark:text-yellow-400'
                           }`}>
-                            {service.status === 'connected' ? 'Connected' :
-                             service.status === 'error' ? 'Error' : 'Disconnected'}
+                            {service.status === 'connected' ? t('connected') :
+                             service.status === 'error' ? t('error') : t('disconnected')}
                           </span>
                         </div>
                       </div>
@@ -314,7 +316,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                   <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                       <Settings className="h-5 w-5 mr-2 text-blue-500" />
-                      Background Activity
+                      {t('backgroundActivity')}
                     </h3>
                     <div className="space-y-4">
                       {backgroundJobs.map((job) => (
@@ -349,7 +351,7 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
                 <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6">
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
                     <History className="h-5 w-5 mr-2 text-blue-500" />
-                    Recent Activity
+                    {t('recentActivity')}
                   </h3>
                   <div className="space-y-4">
                     {recentActivity.map((activity) => (
@@ -393,10 +395,10 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">⚡</div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-                  Automation Studio
+                  {t('automationStudio')}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Advanced scheduling and workflow automation features coming soon.
+                  {t('automationFeatures')}
                 </p>
               </div>
             )}
@@ -407,17 +409,17 @@ export const CloudExportHub: React.FC<CloudExportHubProps> = ({ isOpen, onClose 
             <div className="flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-400">
               <span className="flex items-center">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-                All systems operational
+                {t('allSystemsOperational')}
               </span>
-              <span>Last updated: {new Date().toLocaleTimeString()}</span>
+              <span>{t('lastUpdated')}: {new Date().toLocaleTimeString()}</span>
             </div>
             
             <div className="flex space-x-3">
               <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                View Documentation
+                {t('viewDocumentation')}
               </button>
               <button className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-500 rounded-md hover:from-blue-600 hover:to-purple-600 transition-colors">
-                Quick Export
+                {t('quickExport')}
               </button>
             </div>
           </div>

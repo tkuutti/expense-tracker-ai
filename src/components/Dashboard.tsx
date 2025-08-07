@@ -4,6 +4,7 @@ import React from 'react';
 import { DollarSign, TrendingUp, Calendar, PieChart } from 'lucide-react';
 import { PieChart as RechartsPieChart, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Pie } from 'recharts';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { formatCurrency, getCategoryColor } from '@/lib';
 import { ExpenseCategory } from '@/types';
 
@@ -18,19 +19,33 @@ const CATEGORY_COLORS = {
 
 export const Dashboard: React.FC = () => {
   const { getSummary } = useExpenses();
+  const { t } = useLanguage();
   const summary = getSummary();
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExpenseCategory): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
 
   const pieChartData = Object.entries(summary.categorySummary)
     .filter(([, amount]) => amount > 0)
     .map(([category, amount]) => ({
-      name: category,
+      name: getCategoryName(category as ExpenseCategory),
       value: amount,
       color: CATEGORY_COLORS[category as ExpenseCategory],
     }));
 
   const barChartData = Object.entries(summary.categorySummary)
     .map(([category, amount]) => ({
-      category,
+      category: getCategoryName(category as ExpenseCategory),
       amount,
     }));
 
@@ -92,31 +107,31 @@ export const Dashboard: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Expenses"
+          title={t('totalExpenses')}
           value={formatCurrency(summary.totalExpenses)}
           icon={<DollarSign className="h-6 w-6" />}
           color="blue"
         />
         
         <StatCard
-          title="This Month"
+          title={t('monthlyTotal')}
           value={formatCurrency(summary.monthlyTotal)}
           icon={<Calendar className="h-6 w-6" />}
           color="green"
         />
         
         <StatCard
-          title="Top Category"
-          value={summary.topCategory?.category || 'None'}
+          title={t('topCategory')}
+          value={summary.topCategory ? getCategoryName(summary.topCategory.category) : 'None'}
           subtitle={summary.topCategory ? formatCurrency(summary.topCategory.amount) : ''}
           icon={<TrendingUp className="h-6 w-6" />}
           color="purple"
         />
         
         <StatCard
-          title="Categories"
+          title={t('activeCategories')}
           value={Object.values(summary.categorySummary).filter(amount => amount > 0).length.toString()}
-          subtitle="with expenses"
+          subtitle={t('withExpenses')}
           icon={<PieChart className="h-6 w-6" />}
           color="orange"
         />
@@ -127,7 +142,7 @@ export const Dashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Pie Chart */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Spending by Category</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('expensesByCategory')}</h3>
             {pieChartData.length > 0 ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -149,14 +164,14 @@ export const Dashboard: React.FC = () => {
               </div>
             ) : (
               <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                No expenses to display
+                {t('noExpenses')}
               </div>
             )}
           </div>
 
           {/* Bar Chart */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Category Breakdown</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('categories')}</h3>
             {barChartData.some(item => item.amount > 0) ? (
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
@@ -186,7 +201,7 @@ export const Dashboard: React.FC = () => {
               </div>
             ) : (
               <div className="h-64 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                No expenses to display
+                {t('noExpenses')}
               </div>
             )}
           </div>
@@ -196,7 +211,7 @@ export const Dashboard: React.FC = () => {
       {/* Category Details */}
       {summary.totalExpenses > 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Category Details</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('categories')}</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {Object.entries(summary.categorySummary)
               .filter(([, amount]) => amount > 0)
@@ -207,7 +222,7 @@ export const Dashboard: React.FC = () => {
                   <div key={category} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                     <div className="flex items-center gap-3">
                       <span className={`px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(category as ExpenseCategory)}`}>
-                        {category}
+                        {getCategoryName(category as ExpenseCategory)}
                       </span>
                     </div>
                     <div className="text-right">
@@ -224,8 +239,8 @@ export const Dashboard: React.FC = () => {
       {summary.totalExpenses === 0 && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
           <DollarSign className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No expenses yet</h3>
-          <p className="text-gray-500 dark:text-gray-400">Start tracking your expenses to see analytics and insights here.</p>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('noExpenses')}</h3>
+          <p className="text-gray-500 dark:text-gray-400">{t('startAddingExpenses')}</p>
         </div>
       )}
     </div>

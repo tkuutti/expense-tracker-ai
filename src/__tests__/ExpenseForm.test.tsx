@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ExpenseForm } from '@/components/ExpenseForm';
 import { ExpenseProvider } from '@/hooks/useExpenses';
+import { LanguageProvider } from '@/hooks/useLanguage';
 
 interface MockDatePickerProps {
   selected?: Date;
@@ -42,9 +43,11 @@ interface RenderExpenseFormProps {
 
 const renderExpenseForm = (props?: RenderExpenseFormProps) => {
   return render(
-    <ExpenseProvider>
-      <ExpenseForm {...props} />
-    </ExpenseProvider>
+    <LanguageProvider>
+      <ExpenseProvider>
+        <ExpenseForm {...props} />
+      </ExpenseProvider>
+    </LanguageProvider>
   );
 };
 
@@ -54,10 +57,10 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const descriptionInput = screen.getByLabelText(/description/i);
-      const vendorInput = screen.getByLabelText(/vendor/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const descriptionInput = screen.getByLabelText(/kuvaus/i);
+      const vendorInput = screen.getByLabelText(/myyjä/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '15,50');
       await user.type(descriptionInput, 'Test expense');
@@ -73,10 +76,10 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const descriptionInput = screen.getByLabelText(/description/i);
-      const vendorInput = screen.getByLabelText(/vendor/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const descriptionInput = screen.getByLabelText(/kuvaus/i);
+      const vendorInput = screen.getByLabelText(/myyjä/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '100');
       await user.type(descriptionInput, 'Test expense');
@@ -92,8 +95,8 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '15.50');
       await user.click(submitButton);
@@ -105,7 +108,7 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
       await user.click(submitButton);
 
       expect(await screen.findByText(/please enter an amount/i)).toBeInTheDocument();
@@ -115,10 +118,10 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const descriptionInput = screen.getByLabelText(/description/i);
-      const vendorInput = screen.getByLabelText(/vendor/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const descriptionInput = screen.getByLabelText(/kuvaus/i);
+      const vendorInput = screen.getByLabelText(/myyjä/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '0');
       await user.type(descriptionInput, 'Test expense');
@@ -132,8 +135,8 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '15,50,25');
       await user.click(submitButton);
@@ -145,8 +148,8 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       // First enter invalid amount
       await user.type(amountInput, '15.50');
@@ -170,7 +173,7 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
       await user.click(submitButton);
 
       expect(await screen.findByText(/please enter a description/i)).toBeInTheDocument();
@@ -180,7 +183,7 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
       await user.click(submitButton);
 
       expect(await screen.findByText(/please enter a vendor\/payee/i)).toBeInTheDocument();
@@ -190,7 +193,7 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const categorySelect = screen.getByLabelText(/category/i);
+      const categorySelect = screen.getByLabelText(/kategoria/i);
       
       expect(categorySelect).toBeInTheDocument();
       expect(screen.getByDisplayValue('Food')).toBeInTheDocument();
@@ -222,13 +225,13 @@ describe('ExpenseForm', () => {
     test('shows "Edit Expense" title in edit mode', () => {
       renderExpenseForm({ editingExpense });
       
-      expect(screen.getByRole('heading', { name: /edit expense/i })).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /muokkaa kulut/i })).toBeInTheDocument();
     });
 
     test('shows "Update Expense" button text in edit mode', () => {
       renderExpenseForm({ editingExpense });
       
-      expect(screen.getByRole('button', { name: /update expense/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /tallenna/i })).toBeInTheDocument();
     });
   });
 
@@ -237,11 +240,11 @@ describe('ExpenseForm', () => {
       const user = userEvent.setup();
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
-      const descriptionInput = screen.getByLabelText(/description/i);
-      const vendorInput = screen.getByLabelText(/vendor/i);
-      const categorySelect = screen.getByLabelText(/category/i);
-      const submitButton = screen.getByRole('button', { name: /add expense/i });
+      const amountInput = screen.getByLabelText(/summa/i);
+      const descriptionInput = screen.getByLabelText(/kuvaus/i);
+      const vendorInput = screen.getByLabelText(/myyjä/i);
+      const categorySelect = screen.getByLabelText(/kategoria/i);
+      const submitButton = screen.getByRole('button', { name: /lisää kulut/i });
 
       await user.type(amountInput, '15,50');
       await user.type(descriptionInput, 'Test expense');
@@ -264,24 +267,24 @@ describe('ExpenseForm', () => {
     test('has proper form labels', () => {
       renderExpenseForm();
       
-      expect(screen.getByLabelText(/amount/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/category/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/description/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/vendor/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/date/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/summa/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/kategoria/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/kuvaus/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/myyjä/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/päivämäärä/i)).toBeInTheDocument();
     });
 
     test('shows placeholder for amount input with Finnish format example', () => {
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
+      const amountInput = screen.getByLabelText(/summa/i);
       expect(amountInput).toHaveAttribute('placeholder', '15,50');
     });
 
     test('has proper input modes for numeric input', () => {
       renderExpenseForm();
       
-      const amountInput = screen.getByLabelText(/amount/i);
+      const amountInput = screen.getByLabelText(/summa/i);
       expect(amountInput).toHaveAttribute('inputMode', 'decimal');
     });
   });

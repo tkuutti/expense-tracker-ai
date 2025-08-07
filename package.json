@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --hostname 0.0.0.0 --port 3000",
+    "dev:fresh": "pkill -f 'next dev' 2>/dev/null || true && rm -rf .next && rm -rf node_modules/.cache 2>/dev/null || true && sleep 1 && npm run dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

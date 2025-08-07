@@ -3,10 +3,12 @@
 import React, { useState } from 'react';
 import { Cloud, Zap, Share2, Users, Globe } from 'lucide-react';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { CloudExportHub } from './CloudExportHub';
 
 export const CloudExportButton: React.FC = () => {
   const { expenses } = useExpenses();
+  const { t } = useLanguage();
   const [isHubOpen, setIsHubOpen] = useState(false);
 
   const handleOpenHub = () => {
@@ -35,7 +37,7 @@ export const CloudExportButton: React.FC = () => {
             <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full opacity-75 animate-pulse" />
           </div>
           
-          <span className="relative font-semibold">Connect & Share</span>
+          <span className="relative font-semibold">{t('connectShare')}</span>
           
           {/* Connectivity indicator */}
           <div className="relative flex items-center">
@@ -63,30 +65,30 @@ export const CloudExportButton: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 p-4 max-w-sm mx-auto">
           <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center">
             <Globe className="h-4 w-4 mr-2 text-blue-500" />
-            Cloud Export Hub
+            {t('cloudExportHub')}
           </h4>
           <div className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
             <div className="flex items-center">
               <Share2 className="h-3 w-3 mr-2 text-green-500" />
-              Share with team & generate links
+              {t('shareWithTeam')}
             </div>
             <div className="flex items-center">
               <Zap className="h-3 w-3 mr-2 text-yellow-500" />
-              Connect Google Sheets, Dropbox & more
+              {t('connectMultipleServices')}
             </div>
             <div className="flex items-center">
               <Users className="h-3 w-3 mr-2 text-purple-500" />
-              Collaborate & automate exports
+              {t('collaborateAndAutomate')}
             </div>
           </div>
           <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
             <div className="flex items-center justify-between text-xs">
               <span className="text-gray-500 dark:text-gray-400">
-                {expenses.length} expenses ready
+                {expenses.length} {t('expensesReady')}
               </span>
               <span className="flex items-center text-green-600 dark:text-green-400">
                 <div className="w-2 h-2 bg-green-500 rounded-full mr-1" />
-                3 services connected
+                3 {t('servicesConnected')}
               </span>
             </div>
           </div>

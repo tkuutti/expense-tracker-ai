@@ -23,6 +23,7 @@ import {
   Line
 } from 'recharts';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { formatCurrency, getCategoryColor } from '@/lib';
 import { ExpenseCategory, ExpenseFilters } from '@/types';
 import { startOfMonth, endOfMonth, subMonths, isWithinInterval, parseISO, format } from 'date-fns';
@@ -56,7 +57,21 @@ interface MonthlyData {
 
 export const ExpenseCategories: React.FC = () => {
   const { expenses, getFilteredExpenses } = useExpenses();
+  const { t } = useLanguage();
   const [timeFrame, setTimeFrame] = useState<TimeFrame>('current-month');
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExpenseCategory): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
   const [sortBy, setSortBy] = useState<'amount' | 'percentage' | 'count'>('amount');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
 
@@ -193,7 +208,7 @@ export const ExpenseCategories: React.FC = () => {
     const pieChartData = categoryStats
       .filter(stat => stat.amount > 0)
       .map(stat => ({
-        name: stat.category,
+        name: getCategoryName(stat.category),
         value: stat.amount,
         color: stat.color,
       }));
@@ -276,8 +291,8 @@ export const ExpenseCategories: React.FC = () => {
       {/* Header and Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Expense Categories</h2>
-          <p className="text-gray-600 dark:text-gray-400">Analyze your spending patterns by category</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('categories')}</h2>
+          <p className="text-gray-600 dark:text-gray-400">{t('analyzeSpendingPatterns')}</p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3">
@@ -287,10 +302,10 @@ export const ExpenseCategories: React.FC = () => {
             onChange={(e) => setTimeFrame(e.target.value as TimeFrame)}
             className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="current-month">Current Month</option>
-            <option value="last-month">Last Month</option>
-            <option value="last-3-months">Last 3 Months</option>
-            <option value="all-time">All Time</option>
+            <option value="current-month">{t('currentMonth')}</option>
+            <option value="last-month">{t('lastMonth')}</option>
+            <option value="last-3-months">{t('lastThreeMonths')}</option>
+            <option value="all-time">{t('allTime')}</option>
           </select>
 
           {/* Sort Controls */}
@@ -300,9 +315,9 @@ export const ExpenseCategories: React.FC = () => {
               onChange={(e) => setSortBy(e.target.value as 'amount' | 'percentage' | 'count')}
               className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="amount">Sort by Amount</option>
-              <option value="percentage">Sort by %</option>
-              <option value="count">Sort by Count</option>
+              <option value="amount">{t('sortByAmount')}</option>
+              <option value="percentage">{t('sortByPercentage')}</option>
+              <option value="count">{t('sortByCount')}</option>
             </select>
             
             <button
@@ -320,7 +335,7 @@ export const ExpenseCategories: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Spent</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('totalSpent')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatCurrency(totalAmount)}</p>
             </div>
             <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900">
@@ -332,7 +347,7 @@ export const ExpenseCategories: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Total Expenses</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('totalExpenses')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">{totalCount}</p>
             </div>
             <div className="p-3 rounded-full bg-green-100 dark:bg-green-900">
@@ -344,7 +359,7 @@ export const ExpenseCategories: React.FC = () => {
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Active Categories</p>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{t('activeCategories')}</p>
               <p className="text-2xl font-bold text-gray-900 dark:text-white">
                 {categoryStats.filter(stat => stat.amount > 0).length}
               </p>
@@ -362,7 +377,7 @@ export const ExpenseCategories: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pie Chart */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Category Distribution</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('expensesByCategory')}</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <RechartsPieChart>
@@ -387,7 +402,7 @@ export const ExpenseCategories: React.FC = () => {
 
             {/* Monthly Trends */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">6-Month Trends</h3>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('monthlyTrends')}</h3>
               <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={monthlyTrends}>
@@ -421,7 +436,7 @@ export const ExpenseCategories: React.FC = () => {
 
           {/* Category Details */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">Category Breakdown</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">{t('categories')}</h3>
             <div className="space-y-4">
               {categoryStats.map((stat) => (
                 <div key={stat.category} className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
@@ -432,7 +447,7 @@ export const ExpenseCategories: React.FC = () => {
                         style={{ backgroundColor: stat.color }}
                       ></span>
                       <span className={`px-3 py-1 text-sm font-medium rounded-full ${getCategoryColor(stat.category)}`}>
-                        {stat.category}
+                        {getCategoryName(stat.category)}
                       </span>
                       {timeFrame !== 'all-time' && stat.trend !== 'neutral' && (
                         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${
@@ -453,11 +468,11 @@ export const ExpenseCategories: React.FC = () => {
                   
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-3">
                     <div className="text-center sm:text-left">
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Expenses</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('expenses')}</div>
                       <div className="font-medium text-gray-900 dark:text-white">{stat.expenseCount}</div>
                     </div>
                     <div className="text-center sm:text-left">
-                      <div className="text-sm text-gray-500 dark:text-gray-400">Average</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('average')}</div>
                       <div className="font-medium text-gray-900 dark:text-white">{formatCurrency(stat.averageAmount)}</div>
                     </div>
                     <div className="text-center sm:text-right">
@@ -480,11 +495,11 @@ export const ExpenseCategories: React.FC = () => {
       ) : (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
           <PieChart className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No expenses found</h3>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('noExpenses')}</h3>
           <p className="text-gray-500 dark:text-gray-400">
             {timeFrame === 'all-time' 
-              ? 'Start adding expenses to see category analytics.' 
-              : 'No expenses found for the selected time period. Try adjusting the time frame.'}
+              ? t('startAddingExpensesCategory')
+              : t('noExpensesFoundPeriod')}
           </p>
         </div>
       )}

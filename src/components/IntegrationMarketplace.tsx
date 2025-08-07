@@ -19,6 +19,7 @@ import {
   Bot
 } from 'lucide-react';
 import { IntegratedService, ServiceType } from '@/types';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface IntegrationMarketplaceProps {
   onServiceConnect?: (serviceId: string) => void;
@@ -27,6 +28,7 @@ interface IntegrationMarketplaceProps {
 export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
   onServiceConnect
 }) => {
+  const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<ServiceType | 'all'>('all');
 
@@ -35,11 +37,11 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
     {
       id: 'google-sheets',
       name: 'google-sheets',
-      displayName: 'Google Sheets',
+      displayName: t('googleSheets'),
       type: 'productivity',
       status: 'connected',
       icon: '📊',
-      description: 'Export data directly to Google Sheets with real-time sync and collaboration features.',
+      description: t('exportDataDirectly'),
       capabilities: ['real-time-sync', 'auto-format', 'collaboration', 'formulas'],
       isPopular: true,
       userCount: 1247,
@@ -47,33 +49,33 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
     {
       id: 'dropbox',
       name: 'dropbox',
-      displayName: 'Dropbox',
+      displayName: t('dropbox'),
       type: 'storage',
       status: 'disconnected',
       icon: '📦',
-      description: 'Automatically save exports to your Dropbox with version history and sharing.',
+      description: t('automaticallySaveExports'),
       capabilities: ['file-sync', 'version-history', 'sharing', 'backup'],
       userCount: 892,
     },
     {
       id: 'gmail',
       name: 'gmail',
-      displayName: 'Gmail',
+      displayName: t('gmail'),
       type: 'communication',
       status: 'disconnected',
       icon: '✉️',
-      description: 'Send automated email reports with customizable templates and scheduling.',
+      description: t('emailReports'),
       capabilities: ['automated-emails', 'scheduling', 'templates', 'attachments'],
       userCount: 2341,
     },
     {
       id: 'slack',
       name: 'slack',
-      displayName: 'Slack',
+      displayName: t('slackIntegration'),
       type: 'communication',
       status: 'disconnected',
       icon: '💬',
-      description: 'Post expense summaries and alerts to Slack channels automatically.',
+      description: t('postExpenseSummaries'),
       capabilities: ['channel-posting', 'notifications', 'bot-commands', 'threading'],
       userCount: 567,
     },
@@ -84,7 +86,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'storage',
       status: 'disconnected',
       icon: '☁️',
-      description: 'Store and sync exports with Microsoft OneDrive for seamless Office integration.',
+      description: t('storeAndSyncOneDrive'),
       capabilities: ['office-integration', 'sync', 'sharing', 'collaboration'],
       userCount: 734,
     },
@@ -95,7 +97,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'automation',
       status: 'disconnected',
       icon: '⚡',
-      description: 'Connect to 5000+ apps with custom automation workflows and triggers.',
+      description: t('connectToAppsZapier'),
       capabilities: ['workflow-automation', 'triggers', 'custom-actions', 'webhooks'],
       userCount: 445,
     },
@@ -106,7 +108,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'productivity',
       status: 'disconnected',
       icon: '📈',
-      description: 'Export to Excel Online with advanced formulas and pivot table generation.',
+      description: t('exportToExcelOnline'),
       capabilities: ['formulas', 'pivot-tables', 'charts', 'collaboration'],
       userCount: 1089,
     },
@@ -117,7 +119,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'analytics',
       status: 'disconnected',
       icon: '📊',
-      description: 'Create powerful visualizations and dashboards from your expense data.',
+      description: t('createVisualizationsTableau'),
       capabilities: ['data-visualization', 'dashboards', 'analytics', 'reporting'],
       userCount: 234,
     },
@@ -128,7 +130,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'analytics',
       status: 'disconnected',
       icon: '⚡',
-      description: 'Build interactive reports and business intelligence dashboards.',
+      description: t('buildInteractiveReportsPowerBI'),
       capabilities: ['business-intelligence', 'interactive-reports', 'data-modeling'],
       userCount: 445,
     },
@@ -139,7 +141,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'productivity',
       status: 'disconnected',
       icon: '🗃️',
-      description: 'Organize expenses in flexible databases with rich field types and views.',
+      description: t('organizeExpensesAirtable'),
       capabilities: ['database-management', 'custom-fields', 'views', 'collaboration'],
       userCount: 678,
     },
@@ -150,7 +152,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'productivity',
       status: 'disconnected',
       icon: '📝',
-      description: 'Create expense documentation and reports in your Notion workspace.',
+      description: t('createExpenseDocumentationNotion'),
       capabilities: ['documentation', 'templates', 'databases', 'collaboration'],
       userCount: 923,
     },
@@ -161,19 +163,19 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       type: 'automation',
       status: 'disconnected',
       icon: '🔗',
-      description: 'Send data to any REST API endpoint with custom payload formatting.',
+      description: t('sendDataWebhooks'),
       capabilities: ['custom-endpoints', 'payload-formatting', 'authentication'],
       userCount: 156,
     }
   ];
 
   const categories: { type: ServiceType | 'all'; label: string; icon: React.ReactNode; count: number }[] = [
-    { type: 'all', label: 'All Services', icon: <Sparkles className="h-4 w-4" />, count: availableServices.length },
-    { type: 'productivity', label: 'Productivity', icon: <FileText className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'productivity').length },
-    { type: 'storage', label: 'Cloud Storage', icon: <Cloud className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'storage').length },
-    { type: 'communication', label: 'Communication', icon: <Mail className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'communication').length },
-    { type: 'automation', label: 'Automation', icon: <Bot className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'automation').length },
-    { type: 'analytics', label: 'Analytics', icon: <TrendingUp className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'analytics').length },
+    { type: 'all', label: t('allServices'), icon: <Sparkles className="h-4 w-4" />, count: availableServices.length },
+    { type: 'productivity', label: t('productivity'), icon: <FileText className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'productivity').length },
+    { type: 'storage', label: t('cloudStorage'), icon: <Cloud className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'storage').length },
+    { type: 'communication', label: t('communication'), icon: <Mail className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'communication').length },
+    { type: 'automation', label: t('automation'), icon: <Bot className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'automation').length },
+    { type: 'analytics', label: t('analytics'), icon: <TrendingUp className="h-4 w-4" />, count: availableServices.filter(s => s.type === 'analytics').length },
   ];
 
   const filteredServices = availableServices.filter(service => {
@@ -191,7 +193,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
     const service = availableServices.find(s => s.id === serviceId);
     if (service) {
       // In a real app, this would open OAuth flow
-      alert(`Connecting to ${service.displayName}...\n\nThis would open the OAuth flow for ${service.displayName} integration.`);
+      alert(`${t('connectingTo')} ${service.displayName}...\n\n${t('oauthFlowMessage')} ${service.displayName} ${t('integration')}.`);
       onServiceConnect?.(serviceId);
     }
   };
@@ -212,10 +214,10 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       {/* Header */}
       <div className="text-center">
         <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-          Integration Marketplace
+          {t('integrationMarketplace')}
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          Connect your expense data to 15+ popular services and automate your workflow
+          {t('connectYourExpenseData')}
         </p>
       </div>
 
@@ -225,7 +227,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search integrations..."
+            placeholder={t('searchIntegrations')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
@@ -282,7 +284,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
             {service.isPopular && (
               <div className="absolute top-4 right-4 bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center">
                 <Star className="h-3 w-3 mr-1" />
-                Popular
+                {t('popular')}
               </div>
             )}
 
@@ -305,7 +307,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
                   {service.status === 'connected' && (
                     <div className="flex items-center text-sm text-green-600 dark:text-green-400">
                       <CheckCircle className="h-3 w-3 mr-1" />
-                      Connected
+                      {t('connected')}
                     </div>
                   )}
                 </div>
@@ -329,7 +331,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
               ))}
               {service.capabilities.length > 3 && (
                 <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs rounded-md">
-                  +{service.capabilities.length - 3} more
+                  +{service.capabilities.length - 3} {t('moreCapabilities')}
                 </span>
               )}
             </div>
@@ -338,7 +340,7 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                 <Users className="h-4 w-4 mr-1" />
-                {service.userCount?.toLocaleString()} users
+                {service.userCount?.toLocaleString()} {t('users')}
               </div>
               <div className="flex items-center text-sm text-yellow-500">
                 <Star className="h-4 w-4 mr-1 fill-current" />
@@ -361,12 +363,12 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
               {service.status === 'connected' ? (
                 <>
                   <CheckCircle className="h-4 w-4" />
-                  <span>Connected</span>
+                  <span>{t('connected')}</span>
                 </>
               ) : (
                 <>
                   <Zap className="h-4 w-4" />
-                  <span>Connect</span>
+                  <span>{t('connect')}</span>
                   <ExternalLink className="h-3 w-3 opacity-70" />
                 </>
               )}
@@ -383,10 +385,10 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
         <div className="text-center py-12">
           <div className="text-6xl mb-4">🔍</div>
           <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-            No integrations found
+            {t('noIntegrationsFound')}
           </h3>
           <p className="text-gray-600 dark:text-gray-400">
-            Try adjusting your search or filter criteria
+            {t('tryAdjustingSearch')}
           </p>
         </div>
       )}
@@ -395,15 +397,15 @@ export const IntegrationMarketplace: React.FC<IntegrationMarketplaceProps> = ({
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 text-center">
         <div className="flex items-center justify-center space-x-2 mb-2">
           <Shield className="h-5 w-5 text-green-500" />
-          <span className="font-medium text-gray-900 dark:text-white">Enterprise Security</span>
+          <span className="font-medium text-gray-900 dark:text-white">{t('enterpriseSecurity')}</span>
         </div>
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          All integrations use OAuth 2.0 and enterprise-grade security. Your data is encrypted in transit and at rest.
+          {t('allIntegrationsSecure')}
         </p>
         <div className="flex items-center justify-center space-x-6 text-xs text-gray-500 dark:text-gray-400">
-          <span>SOC 2 Compliant</span>
-          <span>GDPR Ready</span>
-          <span>24/7 Monitoring</span>
+          <span>{t('soc2Compliant')}</span>
+          <span>{t('gdprReady')}</span>
+          <span>{t('monitoringFullTime')}</span>
         </div>
       </div>
     </div>

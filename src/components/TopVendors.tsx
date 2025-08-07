@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Store, TrendingUp, Users, DollarSign, BarChart3, Eye, EyeOff } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useExpenses } from '@/hooks/useExpenses';
+import { useLanguage } from '@/hooks/useLanguage';
 import { formatCurrency, formatDate, getCategoryColor } from '@/lib';
 import { VendorSummary, ExpenseCategory } from '@/types';
 
@@ -18,7 +19,21 @@ const CATEGORY_COLORS = {
 
 export const TopVendors: React.FC = () => {
   const { getVendorStats } = useExpenses();
+  const { t } = useLanguage();
   const vendorStats = getVendorStats();
+  
+  // Helper function to get translated category name
+  const getCategoryName = (category: ExpenseCategory): string => {
+    switch (category) {
+      case 'Food': return t('food');
+      case 'Transportation': return t('transportation');
+      case 'Entertainment': return t('entertainment');
+      case 'Shopping': return t('shopping');
+      case 'Bills': return t('bills');
+      case 'Other': return t('other');
+      default: return category;
+    }
+  };
   const [viewMode, setViewMode] = useState<'card' | 'table'>('card');
   const [selectedVendor, setSelectedVendor] = useState<VendorSummary | null>(null);
 
@@ -66,7 +81,7 @@ export const TopVendors: React.FC = () => {
           <p className="font-medium text-gray-900 dark:text-white">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm text-gray-600 dark:text-gray-400">
-              {entry.dataKey === 'amount' ? 'Total: ' : 'Transactions: '}
+              {entry.dataKey === 'amount' ? t('totalSpent') + ': ' : t('transactionCount') + ': '}
               {entry.dataKey === 'amount' ? formatCurrency(entry.value) : entry.value}
             </p>
           ))}
@@ -80,7 +95,7 @@ export const TopVendors: React.FC = () => {
     const categoryData = Object.entries(vendor.categories)
       .filter(([, amount]) => amount > 0)
       .map(([category, amount]) => ({
-        name: category,
+        name: getCategoryName(category as ExpenseCategory),
         value: amount,
         color: CATEGORY_COLORS[category as ExpenseCategory],
       }));
@@ -104,19 +119,19 @@ export const TopVendors: React.FC = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Total Spent</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('totalSpent')}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatCurrency(vendor.totalAmount)}</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Transactions</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('transactions')}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{vendor.transactionCount}</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Average Amount</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('averageAmount')}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatCurrency(vendor.averageAmount)}</p>
               </div>
               <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-sm text-gray-600 dark:text-gray-400">Last Transaction</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{t('lastTransaction')}</p>
                 <p className="text-lg font-semibold text-gray-900 dark:text-white">{formatDate(vendor.lastTransactionDate)}</p>
               </div>
             </div>
@@ -124,7 +139,7 @@ export const TopVendors: React.FC = () => {
             {/* Category Breakdown */}
             {categoryData.length > 0 && (
               <div>
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">Category Breakdown</h3>
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">{t('categories')}</h3>
                 <div className="h-64">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -164,8 +179,8 @@ export const TopVendors: React.FC = () => {
       <div className="space-y-6">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-12 text-center">
           <Store className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No vendors yet</h3>
-          <p className="text-gray-500 dark:text-gray-400">Start adding expenses with vendor information to see vendor analytics here.</p>
+          <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('noExpenses')}</h3>
+          <p className="text-gray-500 dark:text-gray-400">{t('startAddingExpensesVendor')}</p>
         </div>
       </div>
     );
@@ -175,14 +190,14 @@ export const TopVendors: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Top Vendors</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('topVendors')}</h2>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode(viewMode === 'card' ? 'table' : 'card')}
             className="flex items-center gap-2 px-3 py-1 text-sm bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600"
           >
             {viewMode === 'card' ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-            {viewMode === 'card' ? 'Table View' : 'Card View'}
+            {viewMode === 'card' ? t('tableView') : t('cardView')}
           </button>
         </div>
       </div>
@@ -190,21 +205,21 @@ export const TopVendors: React.FC = () => {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Vendors"
+          title={t('totalVendors')}
           value={vendorStats.totalVendors.toString()}
           icon={<Users className="h-6 w-6" />}
           color="blue"
         />
         
         <StatCard
-          title="Total Spent"
+          title={t('totalSpent')}
           value={formatCurrency(vendorStats.totalSpent)}
           icon={<DollarSign className="h-6 w-6" />}
           color="green"
         />
         
         <StatCard
-          title="Top Vendor"
+          title={t('mostExpensiveVendor')}
           value={vendorStats.topVendor?.vendor || 'None'}
           subtitle={vendorStats.topVendor ? formatCurrency(vendorStats.topVendor.totalAmount) : ''}
           icon={<TrendingUp className="h-6 w-6" />}
@@ -212,7 +227,7 @@ export const TopVendors: React.FC = () => {
         />
         
         <StatCard
-          title="Average per Vendor"
+          title={t('averagePerVendor')}
           value={formatCurrency(vendorStats.totalSpent / (vendorStats.totalVendors || 1))}
           icon={<BarChart3 className="h-6 w-6" />}
           color="orange"
@@ -221,7 +236,7 @@ export const TopVendors: React.FC = () => {
 
       {/* Top Vendors Chart */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Top 10 Vendors by Spending</h3>
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">{t('topVendors')}</h3>
         {topVendorsData.length > 0 ? (
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
@@ -249,10 +264,9 @@ export const TopVendors: React.FC = () => {
         ) : (
           <div className="h-80 flex flex-col items-center justify-center text-center">
             <BarChart3 className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-4" />
-            <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">No vendor data available</h4>
+            <h4 className="text-lg font-medium text-gray-900 dark:text-white mb-2">{t('noVendorDataAvailable')}</h4>
             <p className="text-gray-500 dark:text-gray-400 max-w-md">
-              Add vendor information to your expenses to see the top vendors chart. 
-              You can edit existing expenses or add new ones with vendor details.
+              {t('addVendorInfoMessage')}
             </p>
           </div>
         )}
@@ -261,7 +275,7 @@ export const TopVendors: React.FC = () => {
       {/* Vendors List */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">All Vendors</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{t('totalVendors')}</h3>
         </div>
 
         {viewMode === 'card' ? (
@@ -281,8 +295,8 @@ export const TopVendors: React.FC = () => {
                     {formatCurrency(vendor.totalAmount)}
                   </div>
                   <div className="text-sm text-gray-500 dark:text-gray-400 space-y-1">
-                    <div>Avg: {formatCurrency(vendor.averageAmount)}</div>
-                    <div>Last: {formatDate(vendor.lastTransactionDate)}</div>
+                    <div>{t('avgShort')} {formatCurrency(vendor.averageAmount)}</div>
+                    <div>{t('lastShort')} {formatDate(vendor.lastTransactionDate)}</div>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1">
                     {Object.entries(vendor.categories)
@@ -304,22 +318,22 @@ export const TopVendors: React.FC = () => {
               <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Vendor
+                    {t('vendor')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Total Amount
+                    {t('totalSpent')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Transactions
+                    {t('transactionCount')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Average
+                    {t('averagePerVendor')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Last Transaction
+                    {t('lastTransaction')}
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                    Actions
+                    {t('actions')}
                   </th>
                 </tr>
               </thead>
@@ -354,7 +368,7 @@ export const TopVendors: React.FC = () => {
                         onClick={() => setSelectedVendor(vendor)}
                         className="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300 text-sm"
                       >
-                        View Details
+                        {t('viewDetails')}
                       </button>
                     </td>
                   </tr>

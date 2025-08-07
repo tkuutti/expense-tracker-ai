@@ -5,6 +5,7 @@ export { ExpenseList } from './ExpenseList';
 export { ExpenseFiltersComponent } from './ExpenseFilters';
 export { ExportButton } from './ExportButton';
 export { CloudExportButton } from './CloudExportButton';
+export { LanguageSelector } from './LanguageSelector';
 export { MonthlyInsights } from './MonthlyInsights';
 export { Navigation } from './Navigation';
 export { ThemeToggle } from './ThemeToggle';
