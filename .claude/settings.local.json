@@ -20,7 +20,13 @@
       "Bash(git add:*)",
       "mcp__playwright__browser_close",
       "Bash(npm run lint)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "mcp__playwright__browser_snapshot",
+      "Bash(pkill:*)",
+      "Bash(find:*)",
+      "Bash(true)",
+      "mcp__playwright__browser_tab_new",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
